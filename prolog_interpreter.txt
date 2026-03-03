@@ -1,0 +1,43 @@
+ # Prolog-like Interpreter (find a cool name)
+ 
+ ## syntax / what should we do
+ 
+ - start with something simple 
+ -> rules = Horn clauses (dijunction of literals with at most one positive) = from a1,a2,...,an derive head || derive head (head. || head :- a1,a,...,an.))
+ -> queries: atoms : variables/constant/functions
+
+## How
+
+- unification (mutable states ? :/) https://en.wikipedia.org/wiki/Unification_(computer_science) 
+- backtracking + depth first search https://en.wikipedia.org/wiki/SLD_resolution
+
+## what more
+
+- pretty printing
+- continue the search
+- allow for comments
+- syntaxic sugar for integers (peano)
+- compare different implementations ?
+
+## TODO
+
+-setup github
+-look at deadlines -> explain the project
+-files structure / big parts
+
+## Examples
+
+derive plus(z,Y,Y).
+
+derive plus(s(X),Y,s(Z))
+  from plus(X,Y,Z).
+
+derive lt(z,s(X)).
+
+derive lt(s(X),s(Y))
+  from lt(X,Y).
+  
+derive zero(z)
+  
+query ? plus(X,Y,Y)) -> should answer X=0
+plus(X,Y,Z) -> Z=Y X=0
