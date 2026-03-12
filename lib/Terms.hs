@@ -5,6 +5,7 @@ import Data.Map (Map)
 type Variable = String -- A variable is just defined by its name
 
 data Term = Var Variable | Function String [Term] -- A term is either a variable or a function (a 0-ary function being a constant)
+  deriving (Eq,Ord,Show)
 
 data Clause = Fact Term | Rule Term [Term] -- A Clause is either an axiom or a conclusion and a set of premisses
 
