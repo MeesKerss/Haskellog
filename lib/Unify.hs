@@ -11,17 +11,28 @@ applySubst s (Var x) =
 applySubst s (Fun name l) =
   Fun name (map (applySubst s) l)
 
-occurenceCheck :: String -> Term -> Bool -- check if the name of a variable appears in a term
-occurenceCheck x (Var y) = x == y
-occurenceCheck x (Fun _ l) = any (occurenceCheck x) l
+occurrenceCheck :: String -> Term -> Bool -- check if the name of a variable appears in a term
+occurrenceCheck x (Var y) = x == y
+occurrenceCheck x (Fun _ l) = any (occurrenceCheck x) l
 
 unification :: Subst -> Term -> Term -> Maybe Subst
 -- return a substitution if it finds one that unify two terms under a predefined substitution.
--- ADD OCCURENCE CHECK !!! use applySubst instead of lookup sometimes ?
 unification sub t1 t2 =
   case (applySubst sub t1, applySubst sub t2) of
     (Var x, Var y) ->
       if x == y then Just sub else Just (Map.insert x (Var y) sub)
-    (Var x, Fun name l) -> undefined
+    (Var x, fun) ->
+      if occurrenceCheck x fun then Nothing else -- The variable appears in the function
+        Just (Map.insert x fun sub)
+    (fun, Var y) ->
+      if occurrenceCheck y fun then Nothing else -- The variable appears in the function
+        Just (Map.insert y fun sub)
+    (Fun name1 l1, Fun name2 l2)
+      | name1 /= name2 -> Nothing
+      | otherwise -> unifyLists sub l1 l2
 
-
+unifyLists :: Subst -> [Term] -> [Term] -> Maybe Subst
+unifyLists sub [] [] = Just sub
+unifyLists sub (x1:xs1) (x2:xs2) =
+  unification sub x1 x2 >>= (\ s -> unifyLists s xs1 xs2)
+unifyLists _ _ _ = Nothing
