@@ -1,3 +1,6 @@
+This module defines our basic types
+
+\begin{code}
 module Terms where
 
 import Data.Map (Map)
@@ -14,3 +17,4 @@ type Program = [Clause] -- A program is a set of clauses
 type Query = [Term] -- A query is a set of terms, interpreted as a conjunction 
 
 type Subst = Map Variable Term -- A substitution associates a term to a variable
+\end{code}

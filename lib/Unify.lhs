@@ -1,3 +1,7 @@
+This module implement unification.
+
+\begin{code}
+
 module Unify where
 
 import qualified Data.Map as Map
@@ -36,3 +40,5 @@ unifyLists sub [] [] = Just sub
 unifyLists sub (x1:xs1) (x2:xs2) =
   unification sub x1 x2 >>= (\ s -> unifyLists s xs1 xs2)
 unifyLists _ _ _ = Nothing
+
+\end{code}
