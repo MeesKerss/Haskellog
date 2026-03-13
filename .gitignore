@@ -29,3 +29,5 @@ dist-*
 *.cabal
 *.bcf*
 *.run.xml
+*.lock
+blank
