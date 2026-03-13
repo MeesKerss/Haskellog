@@ -4,12 +4,10 @@ import Data.Map (Map)
 
 type Variable = String -- A variable is just defined by its name
 
-data Assumption = T Term | Or Assumption Assumption | And Assumption Assumption | Imp Assumption Assumption | Neg Assumption
-
 data Term = Var Variable | Fun String [Term] -- A term is either a variable or a function (a 0-ary function being a constant)
   deriving (Eq,Ord,Show)
 
-data Clause = Fact Term | Rule Term Assumption -- A Clause is either an axiom or a conclusion and a set of premisses
+data Clause = Fact Term | Rule Term [Term] -- A Clause is either an axiom or a conclusion and a set of premisses
 
 type Program = [Clause] -- A program is a set of clauses
 
