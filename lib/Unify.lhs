@@ -1,3 +1,4 @@
+\section{Unify}
 This module implement unification.
 
 \begin{code}
