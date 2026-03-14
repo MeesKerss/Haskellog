@@ -11,6 +11,7 @@ ghc-options: -Wall
 dependencies:
   - QuickCheck
   - base
+  - brick
   - containers
   - directory
   - lens
@@ -18,6 +19,7 @@ dependencies:
   - parsec
   - random
   - template-haskell
+  - vty
 
 library:
   source-dirs: lib
@@ -26,6 +28,7 @@ executables:
   myprogram:
     main: Main.lhs
     source-dirs: exec
+    ghc-options: -threaded
     dependencies:
       - report
 

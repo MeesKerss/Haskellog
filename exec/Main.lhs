@@ -1,38 +1,24 @@
+\section{Wrapping it up in an executable}\label{sec:Main}
 
-\section{Wrapping it up in an exectuable}\label{sec:Main}
+The entry point reads every file given on the command line, concatenates their
+contents, and hands the result to the interactive REPL.
 
-We will now use the library form Section \ref{sec:Basics} in a program.
+\begin{verbatim}
+stack build
+stack exec myprogram -- facts.pl rules.pl
+\end{verbatim}
+
+If no files are given the REPL starts with an empty clause pane.
 
 \begin{code}
 module Main where
 
-import Basics
+import Tui (runTui)
+import System.Environment (getArgs)
 
 main :: IO ()
 main = do
-  putStrLn "Hello!"
-  print somenumbers
-  print (map funnyfunction somenumbers)
-  myrandomnumbers <- randomnumbers
-  print myrandomnumbers
-  print (map funnyfunction myrandomnumbers)
-  putStrLn "GoodBye"
+  files    <- getArgs
+  contents <- mapM readFile files
+  runTui (unlines contents)
 \end{code}
-
-We can run this program with the commands:
-
-\begin{verbatim}
-stack build
-stack exec myprogram
-\end{verbatim}
-
-The output of the program is something like this:
-
-\begin{verbatim}
-Hello!
-[1,2,3,4,5,6,7,8,9,10]
-[100,100,300,300,500,500,700,700,900,900]
-[1,3,0,1,1,2,8,0,6,4]
-[100,300,42,100,100,100,700,42,500,300]
-GoodBye
-\end{verbatim}
