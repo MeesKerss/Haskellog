@@ -7,7 +7,7 @@ import Brick.Widgets.Border
 import Brick.Widgets.Border.Style
 import qualified Graphics.Vty as V
 
-import Parser (parseQuery)
+import QueryParser (parseQuery)
 
 \end{code}
 
@@ -66,6 +66,8 @@ drawUI s = [vBox [vLimitPercent 40 (drawClausesPane s), drawQueryPane s]]
 
 \subsection{Event handling}
 
+The event handling handles how the program should behave on signal input. This manages basic chatbox functionality such as typing or deleting characters. It also handles when to close the program with ctrl+c or by pressing the esc character.
+
 \begin{code}
 
 addDot :: String -> String
@@ -113,6 +115,8 @@ handleEvent _ = return ()
 
 \subsection{App definition}
 
+The app definition bundles together the drawing, event handling, cursor, and styling logic into a single Brick application value.
+
 \begin{code}
 
 tuiApp :: App TuiState () Name
@@ -127,6 +131,8 @@ tuiApp = App
 \end{code}
 
 \subsection{Entry point}
+
+This code is run by the main function in Main.lhs. It initializes the TuiState with the loaded clauses and an empty history and input buffer, then runs the Brick application.
 
 \begin{code}
 

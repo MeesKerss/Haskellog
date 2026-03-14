@@ -1,11 +1,21 @@
+This is a small temporary parser for the query box in the TUI. later in the project this file should be unified with the rule parser to avoid duplicate code.
+
 \begin{code}
-module Parser where
+module QueryParser (Query, parseQuery) where
 
 import Text.Parsec
 import Text.Parsec.String (Parser)
 
-import Syntax
+type Rule = (Conclusion, [Assumption])
 
+type Conclusion = Term
+type Assumption = Term
+
+data Term =  V Variable | Fun Func [Term]
+  deriving (Eq,Ord,Show)
+
+type Func = String
+type Variable = String
 
 type Query = [Term]
 
@@ -22,13 +32,13 @@ pVar :: Parser Term
 pVar = lexeme $ do
   first <- upper <|> char '_'
   rest  <- many (alphaNum <|> char '_')
-  return $ Var (first : rest)
+  return $ V (first : rest)
 
 pAtom :: Parser Term
 pAtom = lexeme $ do
   first <- lower
   rest  <- many (alphaNum <|> char '_')
-  return $ Struct (first : rest) []
+  return $ Fun (first : rest) []
 
 pStruct :: Parser Term
 pStruct = lexeme $ do
@@ -36,7 +46,7 @@ pStruct = lexeme $ do
   rest  <- many (alphaNum <|> char '_')
   let name = first : rest
   args <- between (sym "(") (sym ")") (pTerm `sepBy` sym ",")
-  return $ Struct name args
+  return $ Fun name args
 
 pTerm :: Parser Term
 pTerm = try pStruct <|> try pVar <|> pAtom
