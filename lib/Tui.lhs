@@ -1,3 +1,5 @@
+\section{TUI}
+We import the following:
 \begin{code}
 
 module Tui (runTui) where

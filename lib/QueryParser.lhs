@@ -1,3 +1,4 @@
+\section{QueryParser}
 This is a small temporary parser for the query box in the TUI. later in the project this file should be unified with the rule parser to avoid duplicate code.
 
 \begin{code}
