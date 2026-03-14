@@ -1,3 +1,4 @@
+\section{basic types}
 This module defines our basic types
 
 \begin{code}
