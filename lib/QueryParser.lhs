@@ -5,19 +5,7 @@ module QueryParser (Query, parseQuery) where
 
 import Text.Parsec
 import Text.Parsec.String (Parser)
-
-type Rule = (Conclusion, [Assumption])
-
-type Conclusion = Term
-type Assumption = Term
-
-data Term =  V Variable | Fun Func [Term]
-  deriving (Eq,Ord,Show)
-
-type Func = String
-type Variable = String
-
-type Query = [Term]
+import Terms
 
 ws :: Parser ()
 ws = spaces
@@ -32,7 +20,7 @@ pVar :: Parser Term
 pVar = lexeme $ do
   first <- upper <|> char '_'
   rest  <- many (alphaNum <|> char '_')
-  return $ V (first : rest)
+  return $ Var (first : rest)
 
 pAtom :: Parser Term
 pAtom = lexeme $ do
