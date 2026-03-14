@@ -1,7 +1,13 @@
-\section{TUI}
-We import the following:
-\begin{code}
+\section{Terminal User Interface}
 
+This is our main way to interact with the project. The project can be compiled using \verb!stack build! and then launched with \verb!stack exec myprogram!. Arguments can be given to the program to load prolog rules and facts into the program. This can be done for example as such: \verb!stack exec myprogram -- examples/food.pl examples/meal_rules.pl!. After running that command the user would see something like this:
+
+\includegraphics[width=\textwidth]{figures/tui.png}
+
+Users can type prolog clauses into the query chat box. For now the functionality is quite basic as it would only return the data structure it parsed and not actually return a valid prolog result. If a user would for example enter \verb!food(X).! the terminal then would simply return \verb![Fun "food" [V "X"]]!
+
+\hide{
+\begin{code}
 module Tui (runTui) where
 
 import Brick
@@ -11,10 +17,9 @@ import qualified Graphics.Vty as V
 
 import QueryParser (parseQuery)
 
-\end{code}
+\end{code}}
 
-We use two named viewports so that brick can track their scroll positions
-independently.
+We use a library called brick to handle the UI for us. We use two named viewports so that brick can track their scroll positions independently.
 
 \begin{code}
 
