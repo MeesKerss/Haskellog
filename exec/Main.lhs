@@ -37,16 +37,4 @@ Hello!
 GoodBye
 \end{verbatim}
 
-% I begin the code that I wrote here so you guys can still look up the example malvin gave for literate programming
-Here we define some basic types that we will need for our project. 
-\begin{code}
-type Rule = (Conclusions, [Assumptions])
 
-type Conclusions = Term
-type Assumptions = Term
-data Term =  V Variable | T Func [Term]
-  deriving (Eq,Ord,Show)
-
-type Func = String
-type Variable = Int
-\end{code}
