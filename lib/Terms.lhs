@@ -24,9 +24,9 @@ varsTerm :: Term -> Set.Set Variable -- output a set of all variables in a term.
 varsTerm (Var x) = Set.singleton x
 varsTerm (Fun _ l) = Set.unions (map varsTerm l)
 
-varsClause :: Clause -> Set.Set Variable
+varsClause :: Clause -> Set.Set Variable -- idem for clauses
 varsClause (Fact t) = varsTerm t
-varsClause (Rule t l) = Set.unions (varsTerm t : map varsTerm l) -- idem for clauses
+varsClause (Rule t l) = Set.unions (varsTerm t : map varsTerm l)
 
 headClause :: Clause -> Term -- Fact/Conclusion
 headClause (Fact t) = t

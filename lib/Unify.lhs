@@ -1,5 +1,5 @@
 \section{Unify}
-This module implement unification as well as a few other helfull functions regarding unification/substitution.
+This module implement unification as well as a few other helpfull functions regarding unification/substitution.
 
 \begin{code}
 
