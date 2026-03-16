@@ -1,5 +1,5 @@
 \section{Unify}
-This module implement unification.
+This module implement unification as well as a few other helfull functions regarding unification/substitution.
 
 \begin{code}
 
@@ -41,5 +41,12 @@ unifyLists sub [] [] = Just sub
 unifyLists sub (x1:xs1) (x2:xs2) =
   unification sub x1 x2 >>= (\ s -> unifyLists s xs1 xs2)
 unifyLists _ _ _ = Nothing
+
+applySubstClause :: Subst -> Clause -> Clause
+applySubstClause sub (Fact t) = Fact (applySubst sub t)
+applySubstClause sub (Rule t l) = Rule (applySubst sub t) (map (applySubst sub) l)
+
+applySubstQuery :: Subst -> Query -> Query
+applySubstQuery sub = map (applySubst sub)
 
 \end{code}

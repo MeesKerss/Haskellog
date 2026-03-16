@@ -31,3 +31,4 @@ dist-*
 *.run.xml
 *.lock
 blank
+report.pdf
