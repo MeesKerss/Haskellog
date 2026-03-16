@@ -49,8 +49,30 @@ freshenClause clause = do
   env <- buildRenaming vars
   return (renameClause env clause)
 
-resolution :: Program -> Query -> Maybe Subst
--- We take a list of clauses and a list of terms and see if we can make them true by constructing a proof tree from our clauses
-resolution = undefined
+\end{code}
+
+\verb|solveOneClause| is one step of the SLD resolution algorithm, we take one clause of the program, one goal of the query, the rest of the query and we try to unify the term with the clause. If we suceed, we return the substitution that worked as well as the queries that still need to be computed.
+
+\begin{code}
+
+solveOneClause :: Clause -> Term -> [Term] -> State Int (Maybe (Subst, Query))
+solveOneClause clause goal restQuery =
+  case unification Map.empty goal (headClause clause) of
+    Nothing -> pure Nothing
+    Just sub ->
+      let query = applySubstQuery sub (bodyClause clause ++ restQuery) in
+      pure (Just (sub, query))
+
+\end{code} 
+
+This is the main algorithm, it works as follow. In entry we take our programs, a list of clauses as well as a list of our goal, the program should output a (possibly infinite) list of substitutions of the variables such that the conjonctive query is made true.
+
+\begin{code}
+
+resolution :: Program -> Query -> Maybe [Subst]
+-- We take a list of clauses and a list of goals and see if we can make them true by constructing a proof tree from our clauses
+resolution [] _ = Nothing
+resolution _ [] = Just [Map.empty]
+resolution (rule:otherRules) (query:otherQueries) = undefined
 
 \end{code}
