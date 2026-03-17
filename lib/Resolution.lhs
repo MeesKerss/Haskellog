@@ -149,6 +149,6 @@ query5 =
 \end{code}
 
 TODO :
-if we give the rule parent(X,X) and ask parent(Y,Y), we get  Y = X_0. It is correct, indeed Y should just be instanciated as any variable but maybe we could make it cleaner by either say "Y=Y" or just outut "yes" if it is true for any variables (we just show the variables that need a secific instanciation). -> aybe it should be treated on the UI/pretty printing side.
+if we give the rule parent(X,X) and ask parent(Y,Y), we get  Y = X_0. It is correct, indeed Y should just be instanciated as any variable but maybe we could make it cleaner by either say "Y=Y" or just outut "yes" if it is true for any variables (we just show the variables that need a secific instanciation). -> maybe it should be treated on the UI/pretty printing side.
 
-Be careful for the retty printing/UI part to use lazyness, we could maybe get a possible infinite amount of solutions so the [Subst] given by resolution could be infinite, we have to print them one by one and only make the program do the calculations that are needed (maybe with a buffer so we don't always redo all the calculations ?)
+Be careful for the pretty printing/UI part to use lazyness, we could maybe get a possible infinite amount of solutions so the [Subst] given by resolution could be infinite, we have to print them one by one and only make the program do the calculations that are needed (maybe with a buffer so we don't always redo all the calculations ?)
