@@ -146,6 +146,18 @@ query5 :: Query --list all pairs ancestor/decendant
 query5 =
   [Fun "ancestor" [Var "X", Var "Y"]]
 
+prog2::Program -- (\mathbb{N}, +)
+prog2 =
+  [
+    Fact (Fun "plus" [Var "X",Fun "z" [] ,Var "X"])
+
+  , Rule (Fun "plus" [Var "X", Fun "s" [Var "Y"], Fun "s" [Var "Z"]])
+         [Fun "plus" [Var "X", Var "Y", Var "Z"]]
+  ]
+
+query6 :: Query -- infinite list
+query6 = [Fun "plus" [Var "X", Fun "z" [], Var "Z"]]
+
 \end{code}
 
 TODO :
