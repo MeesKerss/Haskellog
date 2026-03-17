@@ -142,13 +142,9 @@ query4 :: Query --false = empty list
 query4 =
   [Fun "ancestor" [Fun "alice" [], Fun "bob" []]]
 
-query5 :: Query --list all pair ancestor/decendant
+query5 :: Query --list all pairs ancestor/decendant
 query5 =
   [Fun "ancestor" [Var "X", Var "Y"]]
-
-query6 :: Query --list all pair ancestor/decendant
-query6 =
-  [Fun "ancestor" [Var "X", Var "X"]]
 
 \end{code}
 
