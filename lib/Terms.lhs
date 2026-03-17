@@ -1,4 +1,4 @@
-\section{basic types}
+\section{Basic Types}
 This module defines our basic types as well as some basic operations on them.
 
 \begin{code}

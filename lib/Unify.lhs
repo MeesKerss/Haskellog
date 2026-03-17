@@ -1,5 +1,5 @@
 \section{Unify}
-This module implement unification as well as a few other helpfull functions regarding unification/substitution.
+This module implement unification as well as a few other helpfull functions regarding unification/substitution. Unifying two terms mean finding variables substitutions such that the two terms are equal. It is used later to find clauses that match a certain goal.
 
 \begin{code}
 
