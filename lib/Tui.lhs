@@ -15,7 +15,11 @@ import Brick.Widgets.Border
 import Brick.Widgets.Border.Style
 import qualified Graphics.Vty as V
 
+import Control.Monad.IO.Class (liftIO)
 import QueryParser (parseQuery)
+import Terms (Term, Clause, prologTerm, prologClause, prologProgram, prologQuery)
+import Generators ()
+import Test.QuickCheck (Gen, generate, arbitrary, resize, vectorOf)
 
 \end{code}}
 
@@ -86,14 +90,18 @@ handleEvent :: BrickEvent Name () -> EventM Name TuiState ()
 handleEvent (VtyEvent (V.EvKey V.KEsc [])) = halt
 handleEvent (VtyEvent (V.EvKey (V.KChar 'c') [V.MCtrl])) = halt
 
--- submit query on Enter: parse and show the resulting [Term]
+-- submit on Enter
 handleEvent (VtyEvent (V.EvKey V.KEnter [])) = do
   s <- get
-  let q      = addDot (inputBuf s)
-      result = case parseQuery q of
-                 Left err    -> "Parse error: " ++ show err
-                 Right terms -> show terms
-      newLines = ["?- " ++ q, result, ""]
+  let inp = inputBuf s
+  newLines <- case parseCommand inp of
+    Just cmd -> runCommand cmd
+    Nothing  -> do
+      let q      = addDot inp
+          result = case parseQuery q of
+                     Left err    -> "Parse error: " ++ show err
+                     Right terms -> show terms
+      return ["?- " ++ q, result, ""]
   modify (\st -> st { history = history st ++ newLines, inputBuf = "" })
   vScrollToEnd (viewportScroll HistoryVP)
 
@@ -115,8 +123,60 @@ handleEvent (VtyEvent (V.EvKey V.KUp [])) =
 handleEvent (VtyEvent (V.EvKey V.KDown [])) =
   vScrollBy (viewportScroll ClausesVP) 1
 
+-- mouse scroll on whichever viewport the cursor is over
+handleEvent (MouseDown n V.BScrollUp _ _) =
+  vScrollBy (viewportScroll n) (-1)
+handleEvent (MouseDown n V.BScrollDown _ _) =
+  vScrollBy (viewportScroll n) 1
+
 -- ignore everything else
 handleEvent _ = return ()
+
+\end{code}
+
+\subsection{Commands}
+
+The TUI supports colon-prefixed commands like GHCi.  Typing
+\verb|:help| lists them, \verb|:gen term|, \verb|:gen clause|,
+\verb|:gen program| and \verb|:gen query| use the QuickCheck generators
+and pretty-prints the result.
+
+\begin{code}
+
+data Command = Help | GenTerm | GenClause | GenProgram Int | GenQuery Int
+
+parseCommand :: String -> Maybe Command
+parseCommand s = case words s of
+  [":help"]                           -> Just Help
+  [":gen", "term"]                    -> Just GenTerm
+  [":gen", "clause"]                  -> Just GenClause
+  [":gen", "program"]                 -> Just (GenProgram 5)
+  [":gen", "program", n] | [(k,"")] <- reads n -> Just (GenProgram k)
+  [":gen", "query"]                   -> Just (GenQuery 3)
+  [":gen", "query", n]   | [(k,"")] <- reads n -> Just (GenQuery k)
+  _                                    -> Nothing
+
+runCommand :: Command -> EventM Name TuiState [String]
+runCommand Help = return
+  [ ":help              – show this message"
+  , ":gen term          – random term"
+  , ":gen clause        – random clause"
+  , ":gen program [n]   – random program (default 5 clauses)"
+  , ":gen query [n]     – random query   (default 3 goals)"
+  , ""
+  ]
+runCommand GenTerm = do
+  t <- liftIO (generate arbitrary :: IO Term)
+  return [prologTerm t, ""]
+runCommand GenClause = do
+  c <- liftIO (generate arbitrary :: IO Clause)
+  return [prologClause c, ""]
+runCommand (GenProgram n) = do
+  cs <- liftIO (generate (vectorOf n (resize 4 arbitrary) :: Gen [Clause]))
+  return (lines (prologProgram cs) ++ [""])
+runCommand (GenQuery n) = do
+  ts <- liftIO (generate (vectorOf n (resize 4 arbitrary) :: Gen [Term]))
+  return [prologQuery ts, ""]
 
 \end{code}
 
@@ -131,7 +191,9 @@ tuiApp = App
   { appDraw         = drawUI
   , appChooseCursor = showFirstCursor
   , appHandleEvent  = handleEvent
-  , appStartEvent   = return ()
+  , appStartEvent   = do
+      vty <- getVtyHandle
+      liftIO $ V.setMode (V.outputIface vty) V.Mouse True
   , appAttrMap      = const (attrMap V.defAttr [])
   }
 
@@ -150,7 +212,7 @@ runTui clauses = do
         , history     = []
         , inputBuf    = ""
         }
-  _ <- defaultMain tuiApp initState
+  _ <- customMainWithDefaultVty Nothing tuiApp initState
   return ()
 
 \end{code}
