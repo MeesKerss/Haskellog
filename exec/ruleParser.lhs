@@ -63,6 +63,7 @@ pRule = do
           assums <- pAssums
           return (conc, assums)
 \end{code}
+
 Where the conclusion is just parsed as a term and the assumption as a list of terms.\\
 We still have to implement that the list of assumption can be empty.
 \begin{code}
@@ -97,7 +98,7 @@ pTerm = pVar <|> pFunc where
               V . read <$> many1 anyChar
         pFunc = do
               (try $ lookAhead $ oneOf ['a'.. 'z'])
-              a <- (read <$> manyTill anyChar (oneOf " ("))
+              a <- (read <$> manyTill anyChar (oneOf "("))
               b <- pTerms
               return (Fun a b)
 \end{code}
