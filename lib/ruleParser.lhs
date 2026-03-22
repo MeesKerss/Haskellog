@@ -3,17 +3,8 @@
 \begin{code}
 import Text.Read (readMaybe)
 import Text.Parsec
+import Terms
 
-type Rule = (Conclusion, [Assumption])
-
-type Conclusion = Term
-type Assumption = Term
-
-data Term =  V Variable | Fun Func [Term]
-  deriving (Eq,Ord,Show)
-
-type Func = String
-type Variable = String
 \end{code}}
 In This section we look at the parser for the rules. The rules should be fed as
 as a regular text file. Here some examples for rules:
@@ -95,7 +86,7 @@ pTerm :: Parsec String () Term
 pTerm = pVar <|> pFunc where
         pVar = do
               (try $ lookAhead $ oneOf ['A'.. 'Z'])
-              V . read <$> many1 anyChar
+              Var . read <$> many1 anyChar
         pFunc = do
               (try $ lookAhead $ oneOf ['a'.. 'z'])
               a <- (read <$> manyTill anyChar (oneOf "("))
