@@ -5,6 +5,11 @@ import Text.Read (readMaybe)
 import Text.Parsec
 import Terms
 
+type Rule = (Conclusion, [Assumption])
+
+type Conclusion = Term
+type Assumption = Term
+
 \end{code}}
 In This section we look at the parser for the rules. The rules should be fed as
 as a regular text file. Here some examples for rules:
@@ -93,4 +98,24 @@ pTerm = pVar <|> pFunc where
               b <- pTerms
               return (Fun a b)
 \end{code}
-What is still left to do is to check for spaces at the right places.
+Now we add an acces:
+
+\begin{code}
+
+
+parseRule :: String -> Either ParseError Rule
+parseRule = parse pRule "<Rule>"
+
+
+pV :: Parsec String () Term
+pV = pLk <* eof where
+      pLk =  Var . read <$> many1 anyChar
+
+      --pLk = (try $ lookAhead $ oneOf ['A'.. 'Z']) >> Var . read <$> many1 anyChar
+
+
+parseTerm :: String -> Either ParseError Term
+parseTerm = parse pV "<term>"
+\end{code}
+
+
