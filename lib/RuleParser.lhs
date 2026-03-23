@@ -91,5 +91,9 @@ pTerm = pVar <|> pFunc where
               a <- (read <$> manyTill anyChar (oneOf " ("))
               b <- pTerms
               return (Fun a b)
+
+pProgram ::  String -> Either ParseError Clause
+pProgram = parse pRule "<rule>"
+
 \end{code}
 What is still left to do is to check for spaces at the right places.
