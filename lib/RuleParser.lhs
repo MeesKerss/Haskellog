@@ -100,6 +100,10 @@ pTerm = pVar <|> pFunc where
               a <- (read <$> manyTill anyChar (oneOf "("))
               b <- pTerms
               return (Fun a b)
+
+pProgram ::  String -> Either ParseError Clause
+pProgram = parse pRule "<rule>"
+
 \end{code}
 Now we add an acces:
 

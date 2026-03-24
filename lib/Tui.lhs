@@ -21,6 +21,9 @@ import Terms (Term, Clause, prologTerm, prologClause, prologProgram, prologQuery
 import Generators ()
 import Test.QuickCheck (Gen, generate, arbitrary, resize, vectorOf)
 
+import Resolution
+import RuleParser
+
 \end{code}}
 
 We use a library called brick to handle the UI for us. We use two named viewports so that brick can track their scroll positions independently.
@@ -98,9 +101,12 @@ handleEvent (VtyEvent (V.EvKey V.KEnter [])) = do
     Just cmd -> runCommand cmd
     Nothing  -> do
       let q      = addDot inp
-          result = case parseQuery q of
-                     Left err    -> "Parse error: " ++ show err
-                     Right terms -> show terms
+          result = case mapM pProgram (lines (clausesText s)) of
+                     Left err    -> "Rule parse error: " ++ show err
+                     Right prog  ->
+                       case parseQuery q of
+                         Left err    -> "Query parse error: " ++ show err
+                         Right terms -> show (take 20 (resolution prog terms))
       return ["?- " ++ q, result, ""]
   modify (\st -> st { history = history st ++ newLines, inputBuf = "" })
   vScrollToEnd (viewportScroll HistoryVP)
