@@ -110,10 +110,6 @@ Now we add an acces:
 \begin{code}
 
 
-parseRule :: String -> Either ParseError Rule
-parseRule = parse pRule "<Rule>"
-
-
 pV :: Parsec String () Term
 pV = pLk <* eof where
       pLk =  Var . read <$> many1 anyChar
@@ -121,8 +117,6 @@ pV = pLk <* eof where
       --pLk = (try $ lookAhead $ oneOf ['A'.. 'Z']) >> Var . read <$> many1 anyChar
 
 
-parseTerm :: String -> Either ParseError Term
-parseTerm = parse pV "<term>"
 \end{code}
 
 
