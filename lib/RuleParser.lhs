@@ -1,7 +1,9 @@
 \section{ruleParser}
 \hide{
 \begin{code}
-import Text.Read (readMaybe)
+module RuleParser where
+
+import Terms
 import Text.Parsec
 import Terms
 
@@ -10,7 +12,7 @@ type Rule = (Conclusion, [Assumption])
 type Conclusion = Term
 type Assumption = Term
 
-\end{code}}
+\end{code}
 In This section we look at the parser for the rules. The rules should be fed as
 as a regular text file. Here some examples for rules:
 \begin{verbatim}
@@ -20,7 +22,7 @@ bigger(horse(), dog()):-
 is_bigger(A,B):- bigger(A,B)
 is_bigger(A,B):- bigger(A,Z) & is_bigger(Z,B)
 \end{verbatim}
-We interpret constants as 0-ary functions. The ":-" can be read as 
+We interpret constants as 0-ary functions. The ":-" can be read as
 "if". We only allow horn-clauses so the only connector is conjunction for now.
 \\We use Parsec for the parsing. Now to parse the rules we first establish some seperators:
 
@@ -33,40 +35,40 @@ sepConcAssum = do
 
 andSep :: Parsec String () ()
 andSep = do
-          spaces 
+          spaces
           char '&'
           spaces
 
 termSep :: Parsec String () ()
 termSep = do
-          spaces 
+          spaces
           char ','
           spaces
 
 endOfList :: Parsec String () ()
 endOfList = do
-          spaces 
+          spaces
           char ')'
           spaces
 \end{code}
 Now every Rule is a conclusion and a list of assumptions. We first seperate the clause
 in its two parts:
 \begin{code}
-pRule :: Parsec String () Rule
+pRule :: Parsec String () Clause
 pRule = do
           conc<- pConc
           sepConcAssum
           assums <- pAssums
-          return (conc, assums)
+          return $ if null assums then Fact conc else Rule conc assums
 \end{code}
 
 Where the conclusion is just parsed as a term and the assumption as a list of terms.\\
 We still have to implement that the list of assumption can be empty.
 \begin{code}
-pConc :: Parsec String () Conclusion
+pConc :: Parsec String () Term
 pConc = pTerm
- 
-pAssums :: Parsec String () [Assumption]
+
+pAssums :: Parsec String () [Term]
 pAssums = many $ do
     assum <- pTerm
     eof <|> andSep
@@ -92,6 +94,7 @@ pTerm = pVar <|> pFunc where
         pVar = do
               (try $ lookAhead $ oneOf ['A'.. 'Z'])
               Var . read <$> many1 anyChar
+
         pFunc = do
               (try $ lookAhead $ oneOf ['a'.. 'z'])
               a <- (read <$> manyTill anyChar (oneOf "("))
