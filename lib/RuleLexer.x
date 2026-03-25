@@ -15,6 +15,7 @@ $restOfName = [a-zA-Z0-9_]
 tokens :-
 
     $white+              ;
+    \% [^\n]*             ;
     @varName            { \s -> VARNAME s }
     @funName            { \s -> FUNNAME s }
     \.                  { \_ -> ENDOFRULE}

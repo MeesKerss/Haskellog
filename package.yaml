@@ -11,6 +11,7 @@ ghc-options: -Wall
 dependencies:
   - QuickCheck
   - base
+  - array
   - brick
   - containers
   - directory
@@ -23,6 +24,11 @@ dependencies:
 
 library:
   source-dirs: lib
+  # Needed because ProgramParser.y / RuleLexer.x are generated at build time.
+  # We use Cabal build-tool-depends so the tools can be built/fetched without
+  # requiring system-wide `alex`/`happy` executables on PATH.
+  verbatim: |
+    build-tool-depends: alex:alex, happy:happy
 
 executables:
   myprogram:
