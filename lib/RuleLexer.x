@@ -6,15 +6,15 @@ import Terms
 
 $highkey = [A-Z]
 $lowkey = [a-z]
-$restOfName = [a-zA-Z]
-$white = [ \n\t]
+$restOfName = [a-zA-Z0-9_]
+--$white = [ \n\t]
 
 @varName = $highkey $restOfName*
 @funName   = $lowkey $restOfName*
 
 tokens :-
 
-    $white              ;
+    $white+              ;
     @varName            { \s -> VARNAME s }
     @funName            { \s -> FUNNAME s }
     \.                  { \_ -> ENDOFRULE}
@@ -23,6 +23,7 @@ tokens :-
     ":-"                { \_ -> IF }
     \(                  { \_ -> LPAREN }
     \)                  { \_ -> RPAREN }
+    \|                  { \_ -> OR}
 
 {
 data Token
@@ -34,5 +35,6 @@ data Token
   | VARSEP
   | AND
   | IF
+  | OR
   deriving (Show, Eq)
 }

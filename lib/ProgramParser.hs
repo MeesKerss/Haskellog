@@ -19,18 +19,18 @@ data HappyAbsSyn t4 t5 t6 t7 t8
 	| HappyAbsSyn8 t8
 
 happyExpList :: Happy_Data_Array.Array Prelude.Int Prelude.Int
-happyExpList = Happy_Data_Array.listArray (0,27) ([768,0,0,8192,0,8,1,32768,1,3,6,0,0,1024,1024,1024,0,768,1536,0,0,0,0
+happyExpList = Happy_Data_Array.listArray (0,28) ([768,0,0,0,1,128,32,0,192,768,3072,0,0,0,64,128,256,0,768,3072,0,0,0,0
 	])
 
 {-# NOINLINE happyExpListPerState #-}
 happyExpListPerState st =
     token_strs_expected
-  where token_strs = ["error","%dummy","%start_parseProgram","Program","Clause","Assum","Term","Terms","funname","varname","'.'","'('","')'","','","'&'","\":-\"","%eof"]
-        bit_start = st Prelude.* 17
-        bit_end = (st Prelude.+ 1) Prelude.* 17
+  where token_strs = ["error","%dummy","%start_parseProgram","Program","Clause","Assum","Term","Terms","funname","varname","'.'","'('","')'","','","'&'","\":-\"","\"|\"","%eof"]
+        bit_start = st Prelude.* 18
+        bit_end = (st Prelude.+ 1) Prelude.* 18
         read_bit = readArrayBit happyExpList
         bits = Prelude.map read_bit [bit_start..bit_end Prelude.- 1]
-        bits_indexed = Prelude.zip bits [0..16]
+        bits_indexed = Prelude.zip bits [0..17]
         token_strs_expected = Prelude.concatMap f bits_indexed
         f (Prelude.False, _) = []
         f (Prelude.True, nr) = [token_strs Prelude.!! nr]
@@ -44,7 +44,7 @@ action_0 _ = happyReduce_1
 
 action_1 _ = happyFail (happyExpListPerState 1)
 
-action_2 (17) = happyAccept
+action_2 (18) = happyAccept
 action_2 _ = happyFail (happyExpListPerState 2)
 
 action_3 (11) = happyShift action_9
@@ -194,7 +194,7 @@ happyReduction_11 (HappyAbsSyn8  happy_var_3)
 happyReduction_11 _ _ _  = notHappyAtAll 
 
 happyNewToken action sts stk [] =
-	action 17 17 notHappyAtAll (HappyState action) sts stk []
+	action 18 18 notHappyAtAll (HappyState action) sts stk []
 
 happyNewToken action sts stk (tk:tks) =
 	let cont i = action i i tk (HappyState action) sts stk tks in
@@ -207,10 +207,11 @@ happyNewToken action sts stk (tk:tks) =
 	VARSEP -> cont 14;
 	AND -> cont 15;
 	IF -> cont 16;
+	OR -> cont 17;
 	_ -> happyError' ((tk:tks), [])
 	}
 
-happyError_ explist 17 tk tks = happyError' (tks, explist)
+happyError_ explist 18 tk tks = happyError' (tks, explist)
 happyError_ explist _ tk tks = happyError' ((tk:tks), explist)
 
 newtype HappyIdentity a = HappyIdentity a
@@ -244,6 +245,9 @@ happySeq = happyDontSeq
 
 parseError :: [Token] -> a
 parseError _ = error "Parse error"
+
+pProgram:: String -> [Clause]
+pProgram = parseProgram . alexScanTokens
 {-# LINE 1 "templates/GenericTemplate.hs" #-}
 -- $Id: GenericTemplate.hs,v 1.26 2005/01/14 14:47:22 simonmar Exp $
 

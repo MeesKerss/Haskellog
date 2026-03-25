@@ -17,6 +17,7 @@ import Terms
     ','     {VARSEP}
     '&'     {AND}
     ":-"    {IF}
+    "|"     {OR}
 
 %%
 
@@ -41,4 +42,7 @@ Terms
     | Term ',' Terms    {$1 : $3}
 
 {parseError :: [Token] -> a
-parseError _ = error "Parse error"}
+parseError _ = error "Parse error"
+
+pProgram:: String -> [Clause]
+pProgram = parseProgram . alexScanTokens}
