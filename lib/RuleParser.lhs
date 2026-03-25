@@ -5,7 +5,7 @@ module RuleParser where
 
 import Terms
 import Text.Parsec
-import Terms
+import QueryParser
 
 type Rule = (Conclusion, [Assumption])
 
@@ -115,6 +115,8 @@ pV = pLk <* eof where
       pLk =  Var . read <$> many1 anyChar
 
       --pLk = (try $ lookAhead $ oneOf ['A'.. 'Z']) >> Var . read <$> many1 anyChar
+pProgram ::  String -> Either ParseError Clause
+pProgram = parse pRule "<rule>"
 
 
 \end{code}
