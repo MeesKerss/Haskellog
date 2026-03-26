@@ -1,0 +1,5 @@
+and(X,Y):- X & Y.
+and(X,Y):- Y & X.
+X:- or(X,Y).
+
+Y:- or(X,Y).
