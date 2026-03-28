@@ -1,1 +1,1 @@
-link(a, X), link(X, Y).
+link(a, X) & link(X, Y).

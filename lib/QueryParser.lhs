@@ -43,7 +43,7 @@ pQuery :: Parser Query
 pQuery = do
   ws
   optional (try (sym "?-"))
-  goals <- pTerm `sepBy1` sym ","
+  goals <- pTerm `sepBy1` sym "&"
   optional (sym ".")
   eof
   return goals

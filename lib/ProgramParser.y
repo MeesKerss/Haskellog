@@ -23,8 +23,7 @@ import Unsafe.Coerce (unsafeCoerce)
 %%
 
 Program
-{-    :                       {Right [Rule (Fun "_and" [Var "_X",Var "_Y"]) [Var "_X",Var "_Y"],Rule (Fun "_and" [Var "_X",Var "_Y"]) [Var "_Y",Var "_X"],Rule (Var "_X") [Fun "_or" [Var "_X",Var "_Y"]],Rule (Var "_Y") [Fun "_or" [Var "_X",Var "_Y"]]]}-}
-    :                       {Right []}
+    :                       {Right [Rule (Fun "_and" [Var "_X",Var "_Y"]) [Var "_X",Var "_Y"],Rule (Fun "_or" [Var "_X",Var "_Y"]) [Var "_X"],Rule (Fun "_or" [Var "_X",Var "_Y"]) [Var "_Y"]]}
     | Clause '.' Program    { case $3 of
                                 Left e  -> Left e
                                 Right xs -> Right ($1 : xs)
