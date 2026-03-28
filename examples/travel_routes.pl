@@ -13,4 +13,4 @@ direct(milan, zurich).
 direct(zurich, berlin).
 
 route(X, Y) :- direct(X, Y).
-route(X, Y) :- direct(X, Z) & route(Z, Y).
+route(X, Y) :- direct(X, Z), route(Z, Y).

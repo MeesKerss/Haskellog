@@ -14,4 +14,4 @@ requires(algorithms, data_structures).
 requires(compilers, prog2).
 requires(compilers, discrete_math).
 
-can_take(Student, Course) :- requires(Course, Need) & completed(Student, Need).
+can_take(Student, Course) :- requires(Course, Need), completed(Student, Need).

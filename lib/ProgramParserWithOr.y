@@ -1,5 +1,5 @@
 {
-module Parser where
+module ProgramParserWithOr where
 import RuleLexer
 import Terms
 }

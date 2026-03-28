@@ -39,10 +39,17 @@ executables:
       - report
 
 tests:
-  simpletests:
-    main: simpletests.lhs
+  # simpletests:
+  #   main: simpletests.lhs
+  #   source-dirs: test
+  #   dependencies:
+  #     - report
+  #     - QuickCheck
+  #     - hspec
+  resolutionCases:
+    main: resolutionCases.lhs
     source-dirs: test
     dependencies:
       - report
-      - QuickCheck
       - hspec
+      - filepath

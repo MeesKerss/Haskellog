@@ -16,7 +16,6 @@ import Unsafe.Coerce (unsafeCoerce)
     '('     {LPAREN}
     ')'     {RPAREN}
     ','     {VARSEP}
-    '&'     {AND}
     ":-"    {IF}
     "|"     {OR}
 
@@ -35,7 +34,7 @@ Clause
 
 Assum
     : Term   { $1 : [] }
-    | Term '&' Assum    { $1 : $3 }
+    | Term ',' Assum    { $1 : $3 }
 
 Term
     : funname '(' Terms ')' {Fun $1 $3}
