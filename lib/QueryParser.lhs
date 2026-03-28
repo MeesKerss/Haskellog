@@ -1,4 +1,5 @@
-This is a small temporary parser for the query box in the TUI. later in the project this file should be unified with the rule parser to avoid duplicate code.
+This module implements a parser for user queries in the TUI.
+
 
 \begin{code}
 module QueryParser (Query, parseQuery) where
@@ -43,10 +44,16 @@ pQuery :: Parser Query
 pQuery = do
   ws
   optional (try (sym "?-"))
-  goals <- pTerm `sepBy1` sym "&"
+  expr <- pOr
   optional (sym ".")
   eof
-  return goals
+  return [expr]
+
+pOr :: Parser Term
+pOr = chainl1 pAnd (sym "|" >> return (\a b -> Fun "_or" [a, b]))
+
+pAnd :: Parser Term
+pAnd = chainl1 pTerm (sym "&" >> return (\a b -> Fun "_and" [a, b]))
 
 parseQuery :: String -> Either ParseError Query
 parseQuery = parse pQuery "<query>"
