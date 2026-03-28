@@ -1,10 +1,3 @@
-% Family tree example (facts + recursive rule)
-% Try:
-%   ancestor(alice, Y).
-%   ancestor(X, diana).
-%   sibling(charlie, dana).
-%   sibling(X, Y).
-
 parent(alice, bob).
 parent(alice, charlie).
 parent(bob, diana).
@@ -16,3 +9,10 @@ ancestor(X, Y) :- parent(X, Y).
 ancestor(X, Y) :- parent(X, Z) & ancestor(Z, Y).
 
 sibling(X, Y) :- parent(P, X) & parent(P, Y).
+
+%   ancestor(X, bob).
+%   ancestor(X, emma).
+%   ancestor(X, bob), ancestor(X, emma).
+
+%   sibling(bob, charlie).
+%   sibling(fred, X).
