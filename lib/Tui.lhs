@@ -186,11 +186,11 @@ parseCommand s = case words s of
 
 runCommand :: Command -> EventM Name TuiState [String]
 runCommand Help = return
-  [ ":help              – show this message"
-  , ":gen term          – random term"
-  , ":gen clause        – random clause"
-  , ":gen program [n]   – random program (default 5 clauses)"
-  , ":gen query [n]     – random query   (default 3 goals)"
+  [ ":help              - show this message"
+  , ":gen term          - random term"
+  , ":gen clause        - random clause"
+  , ":gen program [n]   - random program (default 5 clauses)"
+  , ":gen query [n]     - random query   (default 3 goals)"
   , ""
   ]
 runCommand GenTerm = do
