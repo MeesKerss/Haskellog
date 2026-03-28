@@ -30,7 +30,7 @@ happyExpList = Happy_Data_Array.listArray (0,82) ([24576,0,0,0,0,16,0,1,8,0,4915
 {-# NOINLINE happyExpListPerState #-}
 happyExpListPerState st =
     token_strs_expected
-  where token_strs = ["error","%dummy","%start_ProgramParserWithOr","Program","Clause","Assum","Assum2","Conj","Conj1","ConjChild1","ConjChild","Term","Terms","funname","varname","'.'","'('","')'","','","'&'","\":-\"","\"|\"","%eof"]
+  where token_strs = ["error","%dummy","%start_programParserWithOr","Program","Clause","Assum","Assum2","Conj","Conj1","ConjChild1","ConjChild","Term","Terms","funname","varname","'.'","'('","')'","','","'&'","\":-\"","\"|\"","%eof"]
         bit_start = st Prelude.* 23
         bit_end = (st Prelude.+ 1) Prelude.* 23
         read_bit = readArrayBit happyExpList
@@ -434,7 +434,7 @@ happyReturn1 :: () => a -> b -> HappyIdentity a
 happyReturn1 = \a tks -> (Prelude.return) a
 happyError' :: () => ([(Token)], [Prelude.String]) -> HappyIdentity a
 happyError' = HappyIdentity Prelude.. (\(tokens, _) -> parseError tokens)
-ProgramParserWithOr tks = happyRunIdentity happySomeParser where
+programParserWithOr tks = happyRunIdentity happySomeParser where
  happySomeParser = happyThen (happyParse action_0 tks) (\x -> case x of {HappyAbsSyn4 z -> happyReturn z; _other -> notHappyAtAll })
 
 happySeq = happyDontSeq
@@ -444,7 +444,7 @@ parseError :: [Token] -> a
 parseError _ = error "Parse error"
 
 pProgram:: String -> [Clause]
-pProgram = parseProgram . alexScanTokens
+pProgram = programParserWithOr . alexScanTokens
 {-# LINE 1 "templates/GenericTemplate.hs" #-}
 -- $Id: GenericTemplate.hs,v 1.26 2005/01/14 14:47:22 simonmar Exp $
 
