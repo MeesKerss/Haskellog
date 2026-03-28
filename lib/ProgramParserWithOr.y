@@ -4,6 +4,7 @@ import RuleLexer
 import Terms
 }
 
+
 %name parseProgram
 %tokentype {Token}
 %error {parseError}
@@ -67,4 +68,4 @@ Terms
 parseError _ = error "Parse error"
 
 pProgram:: String -> [Clause]
-pProgram = parseProgram . alexScanTokens}
+pProgram = programParserWithOr . alexScanTokens}
