@@ -24,13 +24,13 @@ data HappyAbsSyn t4 t5 t6 t7 t8 t9 t10 t11 t12 t13
 	| HappyAbsSyn13 t13
 
 happyExpList :: Happy_Data_Array.Array Prelude.Int Prelude.Int
-happyExpList = Happy_Data_Array.listArray (0,82) ([24576,0,0,0,0,16,0,1,8,0,49152,0,352,12288,0,0,0,0,512,0,0,32,0,0,8,0,22528,0,128,8192,0,0,384,0,68,0,45056,0,88,11264,0,22,16384,0,0,0,0,0,176,32768,8,0,5632,0,0,8192,0,0,8704,0,0,0
+happyExpList = Happy_Data_Array.listArray (0,80) ([24576,0,0,0,0,16,0,1,8,0,49152,0,352,12288,0,0,0,0,512,0,0,32,0,0,4,0,22528,0,128,8192,0,0,384,0,68,0,45056,0,88,11264,0,22,16384,0,0,0,0,0,176,32768,8,0,5632,0,0,8192,0,0,8704,0,0,0
 	])
 
 {-# NOINLINE happyExpListPerState #-}
 happyExpListPerState st =
     token_strs_expected
-  where token_strs = ["error","%dummy","%start_ProgramParserWithOr","Program","Clause","Assum","Assum2","Conj","Conj1","ConjChild1","ConjChild","Term","Terms","funname","varname","'.'","'('","')'","','","'&'","\":-\"","\"|\"","%eof"]
+  where token_strs = ["error","%dummy","%start_parseProgram","Program","Clause","Assum","Assum2","Conj","Conj1","ConjChild1","ConjChild","Term","Terms","funname","varname","'.'","'('","')'","','","'&'","\":-\"","\"|\"","%eof"]
         bit_start = st Prelude.* 23
         bit_end = (st Prelude.+ 1) Prelude.* 23
         read_bit = readArrayBit happyExpList
@@ -102,10 +102,10 @@ action_14 _ = happyReduce_8
 
 action_15 _ = happyReduce_12
 
-action_16 (20) = happyShift action_26
+action_16 (19) = happyShift action_26
 action_16 _ = happyReduce_10
 
-action_17 (20) = happyReduce_16
+action_17 (20) = happyReduce_14
 action_17 (22) = happyReduce_14
 action_17 _ = happyReduce_16
 
@@ -193,7 +193,7 @@ action_34 (18) = happyShift action_39
 action_34 (22) = happyShift action_36
 action_34 _ = happyFail (happyExpListPerState 34)
 
-action_35 (20) = happyReduce_17
+action_35 (20) = happyReduce_15
 action_35 (22) = happyReduce_15
 action_35 _ = happyReduce_17
 
@@ -220,7 +220,7 @@ action_41 _ = happyReduce_17
 
 happyReduce_1 = happySpecReduce_0  4 happyReduction_1
 happyReduction_1  =  HappyAbsSyn4
-		 ([Rule (Fun "and" [Var "X",Var "Y"]) [Var "X",Var "Y"],Rule (Fun "and" [Var "X",Var "Y"]) [Var "Y",Var "X"],Rule (Var "X") [Fun "or" [Var "X",Var "Y"]],Rule (Var "Y") [Fun "or" [Var "X",Var "Y"]]]
+		 ([Rule (Fun "_and" [Var "_X",Var "_Y"]) [Var "_X",Var "_Y"],Rule (Fun "_and" [Var "_X",Var "_Y"]) [Var "_Y",Var "_X"],Rule (Var "_X") [Fun "_or" [Var "_X",Var "_Y"]],Rule (Var "_Y") [Fun "_or" [Var "_X",Var "_Y"]]]
 	)
 
 happyReduce_2 = happySpecReduce_3  4 happyReduction_2
@@ -268,7 +268,7 @@ happyReduction_7 (HappyAbsSyn9  happy_var_3)
 	_
 	(HappyAbsSyn7  happy_var_1)
 	 =  HappyAbsSyn6
-		 ((Fun "or" [happy_var_3,happy_var_1]):[]
+		 ((Fun "_or" [happy_var_3,happy_var_1]):[]
 	)
 happyReduction_7 _ _ _  = notHappyAtAll 
 
@@ -284,7 +284,7 @@ happyReduction_9 (HappyAbsSyn9  happy_var_3)
 	_
 	(HappyAbsSyn7  happy_var_1)
 	 =  HappyAbsSyn7
-		 ((Fun "or" [happy_var_3,happy_var_1])
+		 ((Fun "_or" [happy_var_3,happy_var_1])
 	)
 happyReduction_9 _ _ _  = notHappyAtAll 
 
@@ -316,7 +316,7 @@ happyReduction_13 (HappyAbsSyn10  happy_var_3)
 	_
 	(HappyAbsSyn9  happy_var_1)
 	 =  HappyAbsSyn9
-		 (Fun "and" [happy_var_1,happy_var_3]
+		 (Fun "_and" [happy_var_1,happy_var_3]
 	)
 happyReduction_13 _ _ _  = notHappyAtAll 
 
@@ -434,7 +434,7 @@ happyReturn1 :: () => a -> b -> HappyIdentity a
 happyReturn1 = \a tks -> (Prelude.return) a
 happyError' :: () => ([(Token)], [Prelude.String]) -> HappyIdentity a
 happyError' = HappyIdentity Prelude.. (\(tokens, _) -> parseError tokens)
-ProgramParserWithOr tks = happyRunIdentity happySomeParser where
+parseProgram tks = happyRunIdentity happySomeParser where
  happySomeParser = happyThen (happyParse action_0 tks) (\x -> case x of {HappyAbsSyn4 z -> happyReturn z; _other -> notHappyAtAll })
 
 happySeq = happyDontSeq
