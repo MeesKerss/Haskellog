@@ -2,6 +2,7 @@
 module ProgramParser where
 import RuleLexer
 import Terms
+import Unsafe.Coerce (unsafeCoerce)
 }
 
 %name parseProgram
@@ -15,25 +16,29 @@ import Terms
     '('     {LPAREN}
     ')'     {RPAREN}
     ','     {VARSEP}
-    '&'     {AND}
     ":-"    {IF}
     "|"     {OR}
 
 %%
 
 Program
-    :                       {[]}
-    | Clause '.' Program    { $1 : $3 }
+    :                       {Right []}
+    | Clause '.' Program    { case $3 of
+                                Left e  -> Left e
+                                Right xs -> Right ($1 : xs)
+                              }
 Clause
-    : Term ":-"             {Fact $1}
-    | Term ":-" Assum       {Rule $1 $3}
+    : Term                {Fact $1}
+    | Term ":-"          {Fact $1}
+    | Term ":-" Assum    {Rule $1 $3}
 
 Assum
     : Term   { $1 : [] }
-    | Term '&' Assum    { $1 : $3 }
+    | Term ',' Assum    { $1 : $3 }
 
 Term
     : funname '(' Terms ')' {Fun $1 $3}
+    | funname                {Fun $1 []}
     | varname               {Var $1}
 
 Terms
@@ -42,7 +47,10 @@ Terms
     | Term ',' Terms    {$1 : $3}
 
 {parseError :: [Token] -> a
-parseError _ = error "Parse error"
+parseError tokens =
+  let ctx = take 8 tokens
+      msg = "Parse error near tokens: " ++ show ctx
+  in unsafeCoerce (Left (msg :: String) :: Either String [Clause])
 
-pProgram:: String -> [Clause]
+pProgram:: String -> Either String [Clause]
 pProgram = parseProgram . alexScanTokens}
