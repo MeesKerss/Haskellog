@@ -1,4 +1,13 @@
-This module is about the resolution algorithm
+This module is about the resolution algorithm which is the heart of Haskellog. It works as follow:
+\begin{itemize}
+    \item Select a query to solve
+    \item Find a rule or fact whose head can be unified with this query, using fresh variables
+    \item Apply the unification and extend the current substitution
+    \item If the rule is a fact, the query is solved; otherwise, replace the query with the body of the rule (possibly several new queries)
+    \item If a step fails (no unification possible or a later query cannot be solved), backtrack to try another rule or fact
+    \item When all queries are solved, return the final substitution
+
+\end{itemize}
 
 \begin{code}
 module Resolution where
@@ -85,7 +94,7 @@ resolve currentSub prog (goal:restGoals) = do
 
 \end{code}
 
-We now define the clean resolution, hiding the mechanism using the state mmonad or the explicit "current substitution" in argument. We just start the resolve programm with an empty substitution and with the state 0. We also remove all the internal variables from the computation and normalize them by aplying the substitution as far as we can (to get X = bob Y = bob instead of X=Y Y=bob for example).
+We now define the clean resolution, hiding the mechanism using the state monad or the explicit "current substitution" in argument. We just start the resolve programm with an empty substitution and with the state 0. We also remove all the internal variables from the computation and normalize them by aplying the substitution as far as we can (to get X = bob Y = bob instead of X=Y Y=bob for example).
 
 \begin{code}
 
