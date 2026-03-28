@@ -115,8 +115,8 @@ pV = pLk <* eof where
       pLk =  Var . read <$> many1 anyChar
 
       --pLk = (try $ lookAhead $ oneOf ['A'.. 'Z']) >> Var . read <$> many1 anyChar
-pProgram ::  String -> Either ParseError Clause
-pProgram = parse pRule "<rule>"
+{-pProgram ::  String -> Either ParseError Clause
+pProgram = parse pRule "<rule>"-}
 
 
 \end{code}
