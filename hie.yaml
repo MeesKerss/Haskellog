@@ -4,10 +4,10 @@ cradle:
       component: "report:lib"
 
     - path: "./exec/Main.lhs"
-      component: "report:exe:myprogram"
+      component: "report:exe:haskellog"
 
     - path: "./exec/Paths_report.hs"
-      component: "report:exe:myprogram"
+      component: "report:exe:haskellog"
 
     - path: "./test"
       component: "report:test:simpletests"

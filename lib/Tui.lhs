@@ -1,6 +1,6 @@
 \section{Terminal User Interface}
 
-This is our main way to interact with the project. The project can be compiled using \verb!stack build! and then launched with \verb!stack exec myprogram!. Arguments can be given to the program to load prolog rules and facts into the program. This can be done for example as such: \verb!stack exec myprogram -- examples/food.pl examples/meal_rules.pl!. After running that command the user would see something like this:
+This is our main way to interact with the project. The project can be compiled using \verb!stack build! and then launched with \verb!stack exec haskellog!. Arguments can be given to the program to load prolog rules and facts into the program. This can be done for example as such: \verb!stack exec haskellog -- examples/food.pl examples/meal_rules.pl!. After running that command the user would see something like this:
 
 \includegraphics[width=\textwidth]{figures/tui.png}
 

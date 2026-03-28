@@ -31,7 +31,7 @@ library:
     build-tool-depends: alex:alex, happy:happy
 
 executables:
-  myprogram:
+  haskellog:
     main: Main.lhs
     source-dirs: exec
     ghc-options: -threaded
