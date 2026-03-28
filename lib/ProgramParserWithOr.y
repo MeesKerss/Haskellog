@@ -26,6 +26,7 @@ Program
     | Clause '.' Program    { $1 : $3 }
 Clause
     : Term ":-"             {Fact $1}
+    | Term                  {Fact $1}
     | Term ":-" Assum       {Rule $1 $3}
 
 Assum
