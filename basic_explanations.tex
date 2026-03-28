@@ -2,11 +2,11 @@
 
 \subsection{Goals}
 
-Haskellog is an interpreter for a logic programming language similar to Prolog (with a few functionalities missing and a slightly different syntax). The user gives a semantic meaning to some functions, and the program can then answer queries: it can determine whether a certain formula can be derived from the specified rules and, if it can, provide an instantiation of the variables that makes it derivable.
+Haskellog is an interpreter for a logic programming language similar to Prolog. The user gives a semantic meaning to some functions, and the program can then answer queries: it can determine whether a certain formula can be derived from the specified rules and, if it can, provide an instantiation of the variables that makes it derivable.
 
 The program expects a file containing logical rules made from terms.
-Terms are made with functions in lower case, variables in upper case, constants, which are simply functions of arity 0 and integers which are just syntactic sugar for Peano arithmetic: $0 := z(),\ 1 := s(0),\ 2 := s(s(0)),\ \dots$
-Each rule is either a fact, which is a single term like \verb|plus(X,z,X).| that you could interpret as $\forall X \in \mathbb{N}, X+0 = X$ or a rule composed of a conclusion and some premises, such as \verb|sum_of_consecutives(N) :- plus(A, 1, B), plus(A,B,N).| which could be interpreted as "a number $N$ is a sum of two consecutive numbers $A$ and $B$ if $A + B = N$ and $A + 1 = B$". Obviously these interpretations are only given by the rules: the program does not know what \verb|plus| means to you and if you define it, it is your responsability to provide rules that match your intended meaning of each predicate.
+Terms are made with functions in lower case which can represent logical functions or logical predicates, variables in upper case, constants, which are simply functions of arity 0, and the logical connectors | (disjunction) and \& (conjunction). For the sake of readability, in the following examples we use integers as syntactic sugar for Peano arithmetic (1 is \verb|s(z)|, 2 is \verb|s(s(z))|...)
+Each rule is either a fact, which is a single term like \verb|plus(X,z,X).| that you could interpret as $\forall X \in \mathbb{N}, X+0 = X$ or a rule composed of a conclusion and some premises, such as \verb|sum_of_consecutives(N) :- plus(A, 1, B) & plus(A,B,N).| which could be interpreted as "a number $N$ is a sum of two consecutive numbers $A$ and $B$ if $A + B = N$ and $A + 1 = B$". Obviously these interpretations are only given by the rules: the program does not know what \verb|plus| means to you and if you define it, it is your responsability to provide rules that match your intended meaning of each predicate.
 \newline
 For example, we can enrich the semantics of \verb|plus| that we started defining before so that it matches the idea that \verb|plus(X,Y,Z)| should be derivable if $X+Y=Z$ by adding the rule \verb|plus(X,s(Y),s(Z)) :- plus(X,Y,Z).|.
 
