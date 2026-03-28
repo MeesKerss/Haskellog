@@ -4,7 +4,7 @@ import RuleLexer
 import Terms
 }
 
-%name parseProgram
+%name ProgramParserWithOr
 %tokentype {Token}
 %error {parseError}
 

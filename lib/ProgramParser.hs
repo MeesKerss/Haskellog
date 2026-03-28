@@ -1,5 +1,5 @@
 {-# OPTIONS_GHC -w #-}
-module Parser where
+module ProgramParser where
 import RuleLexer
 import Terms
 import qualified Data.Array as Happy_Data_Array
@@ -245,6 +245,9 @@ happySeq = happyDontSeq
 
 parseError :: [Token] -> a
 parseError _ = error "Parse error"
+
+pProgram:: String -> [Clause]
+pProgram = parseProgram . alexScanTokens
 {-# LINE 1 "templates/GenericTemplate.hs" #-}
 -- $Id: GenericTemplate.hs,v 1.26 2005/01/14 14:47:22 simonmar Exp $
 
