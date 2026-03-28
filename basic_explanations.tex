@@ -2,7 +2,7 @@
 
 \subsection{Goals}
 
-Haskellog is an interpreter for a logic programming language similar to Prolog. The user gives a semantic meaning to some functions, and the program can then answer queries: it can determine whether a certain formula can be derived from the specified rules and, if it can, provide an instantiation of the variables that makes it derivable. If there are many such instanciations, Haskellog will provide up to 20 possibilities.
+Haskellog is an interpreter for a logic programming language similar to Prolog. The user gives a semantic meaning to some functions, and the program can then answer queries: it can determine whether a certain formula can be derived from the specified rules and, if it can, provide an instantiation of the variables that makes it derivable. If there are many such instanciations, Haskellog will provide up to 20 possibilities. Variables made be instanciated as constants but also as variables (for example if you define equality and query \verb|X=X|, you could get the answer \verb|X=X_12| which means that this is true for X being a variable which name here is X\_12.)
 
 The program expects a file containing logical rules made from terms.
 Terms are made with functions in lower case which can represent logical functions or logical predicates, variables in upper case, constants, which are simply functions of arity 0, and the logical connectors | (disjunction) and \& (conjunction). For the sake of readability, in the following examples we use integers as syntactic sugar for Peano arithmetic (1 is \verb|s(z)|, 2 is \verb|s(s(z))|...)
