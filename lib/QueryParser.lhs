@@ -1,4 +1,4 @@
-This module implements a parser for user queries in the TUI.
+This module implements a parser for user queries in the TUI. It supports parsing logical terms, variables, and (&), and or (|) in a Prolog-like syntax. 
 
 
 \begin{code}
