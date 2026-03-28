@@ -4,6 +4,8 @@ This module defines our basic types as well as some basic operations on them.
 \begin{code}
 module Terms where
 
+import Test.QuickCheck hiding (Fun)
+import Control.Monad (replicateM)
 import Data.Map (Map)
 import qualified Data.Set as Set
 import Data.List (intercalate)
@@ -67,5 +69,46 @@ prologProgram = unlines . map prologClause
 prologQuery :: Query -> String
 prologQuery []  = "?- true."
 prologQuery ts  = "?- " ++ intercalate ", " (map prologTerm ts) ++ "."
+
+
+\end{code}
+
+The following code is used to generate random programs. The initial use case of this was to use this with quickCheck to test against a known prolog compiler.
+There exists a prolog interpeter written in haskell available as a package.
+Unfortunately we were not able to make that work since the reference interpreter would only work on an older version of haskell. This next code thus is not directly used in the tests but are available to generate random programs in the query text box.
+
+\begin{code}
+
+
+genVar :: Gen Term
+genVar = Var <$> elements ["X","Y","Z","W"]
+
+genFunName :: Gen String
+genFunName = elements ["a","b","c","f","g","h"]
+
+genTerm :: Int -> Gen Term
+genTerm 0 = oneof [genVar, Fun <$> genFunName <*> pure []]
+genTerm n = oneof
+  [ genVar
+  , do name  <- genFunName
+       arity <- choose (0, 3)
+       args  <- replicateM arity (genTerm (n `div` 2))
+       return (Fun name args)
+  ]
+
+instance Arbitrary Term where
+  arbitrary = sized genTerm
+  shrink (Var _)      = []
+  shrink (Fun f args) = args ++ [Fun f as | as <- shrinkList shrink args]
+
+instance Arbitrary Clause where
+  arbitrary = oneof
+    [ Fact <$> arbitrary
+    , Rule <$> arbitrary <*> resize 3 (listOf1 arbitrary)
+    ]
+  shrink (Fact t)    = Fact <$> shrink t
+  shrink (Rule h bs) = [Fact h]
+                    ++ [Rule h' bs | h' <- shrink h]
+                    ++ [Rule h bs' | bs' <- shrinkList shrink bs, not (null bs')]
 
 \end{code}

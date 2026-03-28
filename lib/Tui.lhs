@@ -21,7 +21,6 @@ import qualified Data.Map as Map
 import QueryParser (parseQuery)
 import Terms (Term(..), Clause, Subst, varsTerm, prologTerm, prologClause, prologProgram, prologQuery)
 import qualified Data.Set as Set
-import Generators ()
 import Test.QuickCheck (Gen, generate, arbitrary, resize, vectorOf)
 
 import Resolution
