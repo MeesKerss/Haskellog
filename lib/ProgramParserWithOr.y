@@ -29,16 +29,23 @@ Clause
     | Term ":-" Assum       {Rule $1 $3}
 
 Assum
-    : Conj              { $1:[] }
-    | Assum2 "|" Conj    {(Fun "or" [$3,$1]):[]}
-Assum2
     : Conj              { $1 }
-    | Assum2 "|" Conj    {(Fun "or" [$3,$1])}
+    | Assum2 "|" Conj1    {(Fun "or" [$3,$1]):[]}
+Assum2
+    : Conj1              { $1 }
+    | Assum2 "|" Conj1    {(Fun "or" [$3,$1])}
 
 Conj
-    : ConjChild             { $1 }
-    | Conj '&' ConjChild    {Fun "and" [$1,$3]}
+    : ConjChild             { $1:[] }
+    | ConjChild '&' Conj    {$1: $3}
 
+Conj1
+    : ConjChild1             { $1 }
+    | Conj1 '&' ConjChild1    {Fun "and" [$1,$3]}
+
+ConjChild1
+    : Term                  {$1}
+    | '('Assum2')'           {$2}
 ConjChild
     : Term                  {$1}
     | '('Assum2')'           {$2}
