@@ -16,11 +16,11 @@ type Assumption = Term
 In This section we look at the parser for the rules. The rules should be fed as
 as a regular text file. Here some examples for rules:
 \begin{verbatim}
-bigger(cat(), mouse()):-
-bigger(dog(), cat()):-
-bigger(horse(), dog()):-
-is_bigger(A,B):- bigger(A,B)
-is_bigger(A,B):- bigger(A,Z) & is_bigger(Z,B)
+bigger(cat(), mouse()):-.
+bigger(dog(), cat()):-.
+bigger(horse(), dog()):-.
+is_bigger(A,B):- bigger(A,B).
+is_bigger(A,B):- bigger(A,Z) & is_bigger(Z,B).
 \end{verbatim}
 We interpret constants as 0-ary functions. The ":-" can be read as
 "if". We only allow horn-clauses so the only connector is conjunction for now.
