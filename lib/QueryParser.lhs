@@ -1,5 +1,9 @@
-This module implements a parser for user queries in the TUI. It supports parsing logical terms, variables, and (&), and or (|) in a Prolog-like syntax. 
+\subsection{Query Parser}
 
+When the user submits a query in the TUI text box, it is parsed by this module before being passed to the resolution engine.
+It is implemented with Parsec and accepts the same term syntax as the rule parser.
+The \verb|?-| prefix and trailing \verb|.| are optional, so both Prolog-style and bare queries are accepted.
+Conjunction (\verb|&|) and disjunction (\verb$|$) are supported, with conjunction binding more tightly.
 
 \begin{code}
 module QueryParser (Query, parseQuery) where
