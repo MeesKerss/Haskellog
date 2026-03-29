@@ -1,0 +1,44 @@
+\section{Rule Parser}
+\subsection{Syntax}
+Everyone can write their own text or prolog files to create rules and make querries about. For this we explain how to formulate rules that 
+can be interpreted by Haskellog:\\
+Every rule consits of terms that can be either varibles, functions or constants. Those can be reperesented by a string consiting of Latin letters, Western Arabic numerals and underscores. Varibles have to 
+to start with a capitlized letter and, constants and functions have to begin with a lower case letter. Function have to be followed by open bracket
+list of terms seperated by "," and a closed bracket. Since constants are interpreted as 0-ary function, one can also add brackets after them. Here a few examples: 
+\begin{itemize}
+    \item Varibles: X, Variable, Z_12
+    \item functions: f(X,Y), myFunction(myOtherFunction(X),Variable), f_34(f_4(constant))
+    \item constant: c, constant_34, myConstant()
+\end{itemize}
+Every rule consists of a conconclusion (term) and conditions (also terms) seperated by "&". In between the conclusion and the conditions we write ":-" as a symbole 
+for "if". The rules are seperated by ".". If the conclustion holds without conditions, we can just follow the condition with a "." or write ":-.". 
+Here an examples for a rule file:
+\begin{verbatim}
+    parent(alice, bob).
+    parent(alice, charlie).
+    parent(bob, diana).
+    parent(charlie, emma).
+    parent(charlie, fred).
+    parent(george, alice).
+
+    ancestor(X, Y) :- parent(X, Y).
+    ancestor(X, Y) :- parent(X, Z) & ancestor(Z, Y).
+
+    sibling(X, Y) :- parent(P, X) & parent(P, Y).
+\end{verbatim}
+
+We can also use "|" interpreted as an "or". Note that conjunction is stronger binding then disjuntions. So the example above can be written as:
+\begin{verbatim}
+    parent(alice, bob).
+    parent(alice, charlie).
+    parent(bob, diana).
+    parent(charlie, emma).
+    parent(charlie, fred).
+    parent(george, alice).
+
+    ancestor(X, Y) :- parent(X, Y) | parent(X, Z) & ancestor(Z, Y).
+
+    sibling(X, Y) :- parent(P, X) & parent(P, Y).
+\end{verbatim}
+
+
