@@ -13,6 +13,7 @@ type Conclusion = Term
 type Assumption = Term
 
 \end{code}
+}
 In This section we look at the parser for the rules. The rules should be fed as
 as a regular text file. Here some examples for rules:
 \begin{verbatim}
