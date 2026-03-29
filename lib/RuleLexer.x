@@ -39,3 +39,5 @@ data Token
   | OR
   deriving (Show, Eq)
 }
+
+-- written with the help of this article: https://blog.cofree.coffee/2021-10-29-happy-and-alex-part-1-dont-worry-be-happy/
