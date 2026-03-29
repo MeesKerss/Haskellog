@@ -59,7 +59,7 @@ prologClause :: Clause -> String
 prologClause (Fact t)      = prologTerm t ++ "."
 prologClause (Rule h body) =
   prologTerm h ++ " :-\n    " ++
-  intercalate ",\n    " (map prologTerm body) ++ "."
+  intercalate " &\n    " (map prologTerm body) ++ "."
 
 -- | Render a 'Program' as a Prolog source file.
 prologProgram :: Program -> String
@@ -73,9 +73,11 @@ prologQuery ts  = "?- " ++ intercalate ", " (map prologTerm ts) ++ "."
 
 \end{code}
 
-The following code is used to generate random programs. The initial use case of this was to use this with quickCheck to test against a known prolog compiler.
-There exists a prolog interpeter written in haskell available as a package.
-Unfortunately we were not able to make that work since the reference interpreter would only work on an older version of haskell. This next code thus is not directly used in the tests but are available to generate random programs in the query text box.
+The following code defines \texttt{Arbitrary} instances and generators for random \texttt{Term}s and \texttt{Clause}s.
+Originally, the intention was to use these with QuickCheck to test Haskellog against an existing Prolog interpreter written in Haskell.
+Unfortunately this turned out not to be feasible: the only available package did not support our version of GHC.
+Instead, we use the generators to verify that our parsers are correct: a randomly generated program is pretty-printed and parsed back,
+and we check that the result contains the original clauses (see Section on parser tests).
 
 \begin{code}
 

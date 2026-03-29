@@ -53,3 +53,10 @@ tests:
       - report
       - hspec
       - filepath
+  parserTest:
+    main: parserTest.lhs
+    source-dirs: test
+    dependencies:
+      - report
+      - QuickCheck
+      - hspec

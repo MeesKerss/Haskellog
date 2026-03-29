@@ -1,7 +1,9 @@
-\section{Resolution fixture tests}
+\subsection{Resolution tests}
 
-Each case lives under \verb|test/cases/<name>/| with \verb|program.pl|,
-\verb|query.txt|, and \verb|expected.txt|.
+To test the resolution algorithm, we use a set of small fixed examples.
+Each test case is a directory under \texttt{test/cases/} containing a rule file \texttt{program.pl},
+a query \texttt{query.txt}, and the expected output \texttt{expected.txt}.
+The test suite parses each program and query, runs the resolution engine, formats the answers, and compares the result to the expected file.
 
 \begin{code}
 module Main where
