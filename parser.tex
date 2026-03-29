@@ -1,18 +1,19 @@
 \section{Rule Parser}
+The lexer and parser for the rule files was created with happy and alex, and can be read in the appendix. We will focus here on the most interesting parts.
 \subsection{Syntax}
-Everyone can write their own text or prolog files to create rules and make querries about. For this we explain how to formulate rules that 
+Everyone can write their own text, string or Prolog files to create rules and make queries about. For this we explain how to formulate rules that 
 can be interpreted by Haskellog:\\
-Every rule consits of terms that can be either varibles, functions or constants. Those can be reperesented by a string consiting of Latin letters, Western Arabic numerals and underscores. Varibles have to 
-to start with a capitlized letter and, constants and functions have to begin with a lower case letter. Function have to be followed by open bracket
-list of terms seperated by "," and a closed bracket. Since constants are interpreted as 0-ary function, one can also add brackets after them. Here a few examples: 
+Every rule consists of terms that can be either variables, functions or constants. Those can be represented by a string consisting of Latin letters, Western Arabic numerals and underscores. Variables have to 
+to start with a capitalized letter and, constants and functions have to begin with a lower case letter. Function have to be followed by open bracket
+list of terms separated by \verb|,| and a closed bracket. Since constants are interpreted as 0-ary function, one can also add brackets after them. Here a few examples: 
 \begin{itemize}
-    \item Varibles: X, Variable, Z_12
-    \item functions: f(X,Y), myFunction(myOtherFunction(X),Variable), f_34(f_4(constant))
-    \item constant: c, constant_34, myConstant()
+    \item Varibles: \verb|X|, \verb|Variable|, \verb|Z\_12|
+    \item functions: \verb|f(X,Y)|, \verb|myFunction(myOtherFunction(X),Variable)|, \verb|f\_34(f\_4(constant))|
+    \item constant: \verb|c|, \verb|constant\_34|, \verb|myConstant()|
 \end{itemize}
-Every rule consists of a conconclusion (term) and conditions (also terms) seperated by "&". In between the conclusion and the conditions we write ":-" as a symbole 
-for "if". The rules are seperated by ".". If the conclustion holds without conditions, we can just follow the condition with a "." or write ":-.". 
-Here an examples for a rule file:
+Every rule consists of a conclusion (term) and conditions (also terms) separated by \verb|\&|. In between the conclusion and the conditions we write \verb|:-| as a symbol 
+for "if". The rules are separated by \verb|.|. If the conclusion holds without conditions, we can just follow the condition with a \verb|.| or write \verb|:-.|. 
+Here an examples for a rule file\cite{Wikibooks}:
 \begin{verbatim}
     parent(alice, bob).
     parent(alice, charlie).
@@ -27,18 +28,38 @@ Here an examples for a rule file:
     sibling(X, Y) :- parent(P, X) & parent(P, Y).
 \end{verbatim}
 
-We can also use "|" interpreted as an "or". Note that conjunction is stronger binding then disjuntions. So the example above can be written as:
+We can also use \verb||| interpreted as an "or". Note that conjunction is stronger binding then disjunctions. So the example above can be written as:
 \begin{verbatim}
-    parent(alice, bob).
-    parent(alice, charlie).
-    parent(bob, diana).
-    parent(charlie, emma).
-    parent(charlie, fred).
-    parent(george, alice).
+    parent(alice, bob):-.
+    parent(alice, charlie):-.
+    parent(bob, diana):-.
+    parent(charlie, emma):-.
+    parent(charlie, fred):-.
+    parent(george, alice):-.
 
     ancestor(X, Y) :- parent(X, Y) | parent(X, Z) & ancestor(Z, Y).
-
     sibling(X, Y) :- parent(P, X) & parent(P, Y).
 \end{verbatim}
+\subsection{Implementation of "or" and "and"}
+In the beta version it was not yet possible to use "or" as a connector of terms. We found a quick way to implement this using the infrastructure already given by Haskellog:
+With the following lines
+\begin{verbatim}
+    Program
+    :                       {Right [Rule (Fun "_and" [Var "_X",Var "_Y"]) 
+                            [Var  "_X",Var "_Y"],Rule (Fun "_or" [Var "_X",
+                            Var "_Y"]) [Var "_X"],
+                            Rule (Fun "_or" [Var "_X",Var "_Y"]) [Var "_Y"]]}
+    | Clause '.' Program    { case $3 of
+                                Left e  -> Left e
+                                Right xs -> Right ($1 : xs)
+                              }
+\end{verbatim}
+We insure that at the end of each set of rules the axioms of "and" and "or" are added has rules (in the sense of or program). The axioms are namely
+\begin{verbatim}
+    and(X,Y):- X & Y.
+    or(X,Y):- X.
+    or(X,Y):- Y.
+\end{verbatim}
+In our implementation of these rules we also added underscores before each name of variable or function to insure that a user is not further limited in naming terms. Note that the user can not define terms that start with a underscore via the normal parsing process.
 
 
