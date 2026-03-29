@@ -5,15 +5,15 @@ Everyone can write their own text, string or Prolog files to create rules and ma
 can be interpreted by Haskellog:\\
 Every rule consists of terms that can be either variables, functions or constants. Those can be represented by a string consisting of Latin letters, Western Arabic numerals and underscores. Variables have to 
 to start with a capitalized letter and, constants and functions have to begin with a lower case letter. Function have to be followed by open bracket
-list of terms separated by "," and a closed bracket. Since constants are interpreted as 0-ary function, one can also add brackets after them. Here a few examples: 
+list of terms separated by \verb|,| and a closed bracket. Since constants are interpreted as 0-ary function, one can also add brackets after them. Here a few examples: 
 \begin{itemize}
-    \item Varibles: X, Variable, Z\_12
-    \item functions: f(X,Y), myFunction(myOtherFunction(X),Variable), f\_34(f\_4(constant))
-    \item constant: c, constant\_34, myConstant()
+    \item Varibles: \verb|X|, \verb|Variable|, \verb|Z\_12|
+    \item functions: \verb|f(X,Y)|, \verb|myFunction(myOtherFunction(X),Variable)|, \verb|f\_34(f\_4(constant))|
+    \item constant: \verb|c|, \verb|constant\_34|, \verb|myConstant()|
 \end{itemize}
-Every rule consists of a conclusion (term) and conditions (also terms) separated by "\&". In between the conclusion and the conditions we write ":-" as a symbol 
-for "if". The rules are separated by ".". If the conclusion holds without conditions, we can just follow the condition with a "." or write ":-.". 
-Here an examples for a rule file:
+Every rule consists of a conclusion (term) and conditions (also terms) separated by \verb|\&|. In between the conclusion and the conditions we write \verb|:-| as a symbol 
+for "if". The rules are separated by \verb|.|. If the conclusion holds without conditions, we can just follow the condition with a \verb|.| or write \verb|:-.|. 
+Here an examples for a rule file\cite{Wikibooks}:
 \begin{verbatim}
     parent(alice, bob).
     parent(alice, charlie).
@@ -28,7 +28,7 @@ Here an examples for a rule file:
     sibling(X, Y) :- parent(P, X) & parent(P, Y).
 \end{verbatim}
 
-We can also use "|" interpreted as an "or". Note that conjunction is stronger binding then disjunctions. So the example above can be written as:
+We can also use \verb||| interpreted as an "or". Note that conjunction is stronger binding then disjunctions. So the example above can be written as:
 \begin{verbatim}
     parent(alice, bob):-.
     parent(alice, charlie):-.
@@ -40,7 +40,7 @@ We can also use "|" interpreted as an "or". Note that conjunction is stronger bi
     ancestor(X, Y) :- parent(X, Y) | parent(X, Z) & ancestor(Z, Y).
     sibling(X, Y) :- parent(P, X) & parent(P, Y).
 \end{verbatim}
-\subsection{implementation of "or" and "and"}
+\subsection{Implementation of "or" and "and"}
 In the beta version it was not yet possible to use "or" as a connector of terms. We found a quick way to implement this using the infrastructure already given by Haskellog:
 With the following lines
 \begin{verbatim}
