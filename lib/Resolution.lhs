@@ -1,3 +1,4 @@
+\section{Resolution}
 This module is about the resolution algorithm which is the heart of Haskellog. It works as follow:
 \begin{itemize}
     \item Select a query to solve
@@ -23,15 +24,22 @@ import Data.Maybe (catMaybes)
 \end{code}
 We will need in our algorithm to rename some variables to fresh one because the application of a rule is supposed to be local, Haskellog might apply the same rule twice but on different variables. For that we use the state monad incrementing an integer each time we want to reuse a variable (we first use the variable X1 then X2...).
 
+From X, freshVarName returns  \verb|State X\_n (n+1)| with n the internal state of the monad.
+
 \begin{code}
 
-freshVarName :: Variable -> State Int Variable -- From X return State X_n (n+1) with n the internal state of the monad
+freshVarName :: Variable -> State Int Variable
 freshVarName x = do
   n <- get
   put (n + 1)
   return (x ++ "_" ++ show n)
 
-buildRenaming :: Set.Set Variable -> State Int (Map.Map Variable Variable) -- take a set of Variables and return a renaming associating them to fresh variables
+\end{code}
+
+buildRenaming takes a set of Variables and return a renaming associating them to fresh variables.
+
+\begin{code}
+buildRenaming :: Set.Set Variable -> State Int (Map.Map Variable Variable) 
 buildRenaming vars = do
   pairs <- mapM freshPair (Set.toList vars)
   return (Map.fromList pairs)
@@ -39,8 +47,11 @@ buildRenaming vars = do
     freshPair x = do
       y <- freshVarName x
       return (x, y)
+\end{code}
+renameClause applies the renaming of terms inside a clause.
+\begin{code}
 
-renameTerm :: Map.Map String String -> Term -> Term -- take a renaming and apply it to a term
+renameTerm :: Map.Map String String -> Term -> Term 
 renameTerm env (Var x) =
   case Map.lookup x env of
     Just y  -> Var y
@@ -48,19 +59,20 @@ renameTerm env (Var x) =
 renameTerm env (Fun f args) =
   Fun f (map (renameTerm env) args)
 
-renameClause :: Map.Map String String -> Clause -> Clause -- apply the renaming of terms inside a clause
+renameClause :: Map.Map String String -> Clause -> Clause 
 renameClause env (Fact t) =
   Fact (renameTerm env t)
 renameClause env (Rule h body) =
   Rule (renameTerm env h) (map (renameTerm env) body)
 
-freshenClause :: Clause -> State Int Clause -- we can now write "do clause' <- freshenClause clause" to get a clause with fresh variable in clause'
+freshenClause :: Clause -> State Int Clause 
 freshenClause clause = do
   let vars = varsClause clause
   env <- buildRenaming vars
   return (renameClause env clause)
 
 \end{code}
+We can now write "do clause' <- freshenClause clause" to get a clause with fresh variable in clause'.
 
 \verb|solveOneClause| is one step of the SLD resolution algorithm, we take the current state of our substitution, one clause of the program which we will replace variables by fresh ones, one goal of the query, the rest of the query and we try to unify the term with the clause. If we suceed, we return the substitution that worked as well as the queries that still need to be computed. solveGoal give a list of the substitutions coming from successful unifications with clauses of our program.
 
@@ -114,8 +126,8 @@ restrictSubst query sub =
 
 \end{code}
 
-An example to test the algo before we linked everything together. It shouldn't be here in the end ! TODO
-
+\hide{
+some examples
 \begin{code}
 
 prog1 :: Program
@@ -167,4 +179,4 @@ prog2 =
 query6 :: Query -- infinite list
 query6 = [Fun "plus" [Var "X", Fun "z" [], Var "Z"]]
 
-\end{code}
+\end{code}}

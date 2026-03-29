@@ -8,7 +8,11 @@ module Unify where
 import qualified Data.Map as Map
 import Terms
 
-applySubst :: Subst -> Term -> Term -- substitute every variable in a term with their associated value
+\end{code}
+applySubst substitutes every variables in a term with their associated value.
+\begin{code}
+
+applySubst :: Subst -> Term -> Term
 applySubst s (Var x) =
   case Map.lookup x s of
     Nothing -> Var x
@@ -16,21 +20,28 @@ applySubst s (Var x) =
 applySubst s (Fun name l) =
   Fun name (map (applySubst s) l)
 
-occurrenceCheck :: String -> Term -> Bool -- check if the name of a variable appears in a term
+\end{code}
+occurencechek checks if the name of a variable appears in a term. If it's the case we can't perform unification. If we say that \verb|X| is now \verb|f(X)| we get that it is also equal to \verb|f(f(x))|. \verb|f| does not have a predefined semantic, this is thuse false.
+\begin{code}
+
+occurrenceCheck :: String -> Term -> Bool 
 occurrenceCheck x (Var y) = x == y
 occurrenceCheck x (Fun _ l) = any (occurrenceCheck x) l
 
+\end{code}
+unification returns a substitution if it finds one that unify two terms under a predefined substitution (that will be empty at the start of our program).
+\begin{code}
+
 unification :: Subst -> Term -> Term -> Maybe Subst
--- return a substitution if it finds one that unify two terms under a predefined substitution.
 unification sub t1 t2 =
   case (applySubst sub t1, applySubst sub t2) of
     (Var x, Var y) ->
       if x == y then Just sub else Just (Map.insert x (Var y) sub)
     (Var x, fun) ->
-      if occurrenceCheck x fun then Nothing else -- The variable appears in the function
+      if occurrenceCheck x fun then Nothing else -- The variable appears in the function, we can't perform unification !
         Just (Map.insert x fun sub)
     (fun, Var y) ->
-      if occurrenceCheck y fun then Nothing else -- The variable appears in the function
+      if occurrenceCheck y fun then Nothing else -- idem
         Just (Map.insert y fun sub)
     (Fun name1 l1, Fun name2 l2)
       | name1 /= name2 -> Nothing
